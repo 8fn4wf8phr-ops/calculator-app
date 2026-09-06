@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#c1652f">
+  <title>Calculator</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="app">
+    <div class="topbar">
+      <div class="mode-tabs" role="tablist">
+        <button class="tab active" data-mode="calculator" role="tab" aria-selected="true">Calculator</button>
+        <button class="tab" data-mode="converter" role="tab" aria-selected="false">Converter</button>
+      </div>
+      <button id="themeToggle" class="icon-btn" aria-label="Toggle dark mode">🌙</button>
+    </div>
+
+    <!-- ===== Calculator panel ===== -->
+    <section class="panel calculator-panel" id="calculatorPanel">
+      <div class="calc-layout">
+
+        <aside class="history-panel" id="historyPanel">
+          <div class="history-header">
+            <span>History</span>
+            <button id="clearHistory" class="text-btn">Clear</button>
+          </div>
+          <ul class="history-list" id="historyList"></ul>
+          <p class="history-empty" id="historyEmpty">No calculations yet</p>
+        </aside>
+
+        <div class="calculator">
+          <div class="calc-top-row">
+            <button id="sciToggle" class="text-btn" aria-pressed="false">Scientific</button>
+            <span class="memory-indicator" id="memoryIndicator" hidden>M</span>
+          </div>
+
+          <div class="display" id="displayBox" title="Click to copy result">
+            <div class="display-previous" id="displayPrevious"></div>
+            <div class="display-current" id="displayCurrent">0</div>
+            <div class="copy-toast" id="copyToast" hidden>Copied!</div>
+          </div>
+
+          <div class="scientific-row" id="scientificRow" hidden>
+            <button class="btn btn-sci" data-action="func" data-value="sin">sin</button>
+            <button class="btn btn-sci" data-action="func" data-value="cos">cos</button>
+            <button class="btn btn-sci" data-action="func" data-value="tan">tan</button>
+            <button class="btn btn-sci" data-action="func" data-value="sqrt">√</button>
+            <button class="btn btn-sci" data-action="square">x²</button>
+            <button class="btn btn-sci" data-action="paren" data-value="(">(</button>
+            <button class="btn btn-sci" data-action="paren" data-value=")">)</button>
+            <button class="btn btn-sci" data-action="pi">π</button>
+          </div>
+
+          <div class="memory-row">
+            <button class="btn btn-mem" data-action="memory" data-value="mc">MC</button>
+            <button class="btn btn-mem" data-action="memory" data-value="mr">MR</button>
+            <button class="btn btn-mem" data-action="memory" data-value="m-">M−</button>
+            <button class="btn btn-mem" data-action="memory" data-value="m+">M+</button>
+          </div>
+
+          <div class="buttons">
+            <button class="btn btn-fn" data-action="clear">AC</button>
+            <button class="btn btn-fn" data-action="delete">DEL</button>
+            <button class="btn btn-fn" data-action="percent">%</button>
+            <button class="btn btn-op" data-action="operator" data-value="÷">÷</button>
+
+            <button class="btn" data-action="number" data-value="7">7</button>
+            <button class="btn" data-action="number" data-value="8">8</button>
+            <button class="btn" data-action="number" data-value="9">9</button>
+            <button class="btn btn-op" data-action="operator" data-value="×">×</button>
+
+            <button class="btn" data-action="number" data-value="4">4</button>
+            <button class="btn" data-action="number" data-value="5">5</button>
+            <button class="btn" data-action="number" data-value="6">6</button>
+            <button class="btn btn-op" data-action="operator" data-value="−">−</button>
+
+            <button class="btn" data-action="number" data-value="1">1</button>
+            <button class="btn" data-action="number" data-value="2">2</button>
+            <button class="btn" data-action="number" data-value="3">3</button>
+            <button class="btn btn-op" data-action="operator" data-value="+">+</button>
+
+            <button class="btn" data-action="sign">±</button>
+            <button class="btn btn-zero" data-action="number" data-value="0">0</button>
+            <button class="btn" data-action="decimal" data-value=".">.</button>
+            <button class="btn btn-equals" data-action="equals">=</button>
+          </div>
+
+          <p class="keyboard-hint">Keys: 0–9 · + − * / · Enter = · Backspace DEL · Esc AC · % percent</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Converter panel ===== -->
+    <section class="panel converter-panel" id="converterPanel" hidden>
+      <div class="converter-tabs" role="tablist">
+        <button class="conv-tab active" data-category="length" role="tab" aria-selected="true">Length</button>
+        <button class="conv-tab" data-category="weight" role="tab" aria-selected="false">Weight</button>
+        <button class="conv-tab" data-category="temperature" role="tab" aria-selected="false">Temperature</button>
+      </div>
+
+      <div class="converter-body">
+        <div class="converter-row">
+          <input type="number" id="convFromValue" class="conv-input" value="1" inputmode="decimal">
+          <select id="convFromUnit" class="conv-select"></select>
+        </div>
+
+        <div class="converter-equals">=</div>
+
+        <div class="converter-row">
+          <input type="text" id="convToValue" class="conv-input" readonly>
+          <select id="convToUnit" class="conv-select"></select>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
