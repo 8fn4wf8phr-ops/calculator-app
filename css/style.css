@@ -121,7 +121,7 @@ body {
   border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 10px 12px;
-  max-height: 130px;
+  max-height: 160px;
   overflow-y: auto;
 }
 
@@ -137,6 +137,27 @@ body {
   margin-bottom: 6px;
 }
 
+.history-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.history-search {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  background: var(--color-key);
+  color: var(--color-text);
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 0.78rem;
+  margin-bottom: 6px;
+}
+
+.history-search:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
 .text-btn {
   border: none;
   background: none;
@@ -149,6 +170,12 @@ body {
 
 .text-btn:hover {
   color: var(--color-accent-dark);
+}
+
+.text-btn:disabled {
+  color: var(--color-muted);
+  cursor: default;
+  opacity: 0.6;
 }
 
 .history-list {

@@ -19,6 +19,8 @@ const memoryIndicator = document.getElementById('memoryIndicator');
 const historyList = document.getElementById('historyList');
 const historyEmpty = document.getElementById('historyEmpty');
 const clearHistoryBtn = document.getElementById('clearHistory');
+const exportHistoryBtn = document.getElementById('exportHistory');
+const historySearchInput = document.getElementById('historySearch');
 
 const allButtons = document.querySelectorAll('.btn');
 
@@ -231,22 +233,42 @@ function handleMemory(action) {
 }
 
 /* ============ History ============ */
+let historyFilter = '';
+
 function saveHistory() {
   try { localStorage.setItem('calc-history', JSON.stringify(history)); } catch (e) {}
 }
 
 function addHistoryEntry(exprUsed, result) {
-  history.unshift({ expr: exprUsed, result: result });
+  history.unshift({ expr: exprUsed, result: result, ts: Date.now() });
   if (history.length > 50) history = history.slice(0, 50);
   saveHistory();
   renderHistory();
 }
 
 function renderHistory() {
-  historyList.innerHTML = '';
-  historyEmpty.hidden = history.length !== 0;
+  const filtered = historyFilter
+    ? history.filter(entry =>
+        entry.expr.toLowerCase().includes(historyFilter) ||
+        String(entry.result).toLowerCase().includes(historyFilter)
+      )
+    : history;
 
-  history.forEach(entry => {
+  historyList.innerHTML = '';
+
+  if (history.length === 0) {
+    historyEmpty.textContent = 'No calculations yet';
+    historyEmpty.hidden = false;
+  } else if (filtered.length === 0) {
+    historyEmpty.textContent = 'No matches';
+    historyEmpty.hidden = false;
+  } else {
+    historyEmpty.hidden = true;
+  }
+
+  exportHistoryBtn.disabled = history.length === 0;
+
+  filtered.forEach(entry => {
     const li = document.createElement('li');
 
     const exprSpan = document.createElement('span');
@@ -260,6 +282,10 @@ function renderHistory() {
     li.appendChild(exprSpan);
     li.appendChild(resultSpan);
 
+    if (entry.ts) {
+      li.title = new Date(entry.ts).toLocaleString();
+    }
+
     li.addEventListener('click', () => {
       expr = String(entry.result);
       justEvaluated = false;
@@ -271,9 +297,43 @@ function renderHistory() {
   });
 }
 
+function exportHistoryAsCSV() {
+  if (history.length === 0) return;
+
+  const rows = [['Expression', 'Result', 'Date']];
+  // Oldest first, so the file reads top-to-bottom in the order calculations happened.
+  const chronological = history.slice().reverse();
+  chronological.forEach(entry => {
+    const dateStr = entry.ts ? new Date(entry.ts).toLocaleString() : '';
+    rows.push([entry.expr, String(entry.result), dateStr]);
+  });
+
+  const csv = rows
+    .map(row => row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(','))
+    .join('\n');
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `calculator-history-${stamp}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 clearHistoryBtn.addEventListener('click', () => {
   history = [];
   saveHistory();
+  renderHistory();
+});
+
+exportHistoryBtn.addEventListener('click', exportHistoryAsCSV);
+
+historySearchInput.addEventListener('input', (e) => {
+  historyFilter = e.target.value.trim().toLowerCase();
   renderHistory();
 });
 

@@ -28,8 +28,12 @@
         <aside class="history-panel" id="historyPanel">
           <div class="history-header">
             <span>History</span>
-            <button id="clearHistory" class="text-btn">Clear</button>
+            <div class="history-actions">
+              <button id="exportHistory" class="text-btn" disabled>Export</button>
+              <button id="clearHistory" class="text-btn">Clear</button>
+            </div>
           </div>
+          <input type="search" id="historySearch" class="history-search" placeholder="Search history…" aria-label="Search history">
           <ul class="history-list" id="historyList"></ul>
           <p class="history-empty" id="historyEmpty">No calculations yet</p>
         </aside>
